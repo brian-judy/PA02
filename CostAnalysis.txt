@@ -1,0 +1,308 @@
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.JScrollPane;
+import javax.swing.JFrame;
+
+public class CostAnalysis {
+	
+	//initialize seven arrays to assist with calculation.
+	static String[] expenditureItem = new String[] {"Website Marketing", "Social Media Marketing", "Radio Advertising", "Newspaper Advertising"};
+	static double[] product1 = new double[4];
+	static double[] product2 = new double[4];
+	static double[] productSums = new double[4];
+	static String[] percentagesFinal = new String[4];
+	static String[] highProduct = new String[3];
+	static String[] lowProduct = new String[3];
+	
+	public static void main(String[] args) {
+	
+	//declare two variables to take in user input
+	String input;
+	double value;
+
+	
+	//assign user input to the two product arrays and validate input to make sure it is not empty and greater than 0.
+	while(true) {
+		try {
+	input = JOptionPane.showInputDialog("Enter the Website Marketing Expenditure for Product 1");
+	
+	if(Double.parseDouble(input) <= 0 || input == null || input.matches(".*[a-zA-Z]+.*"))
+		throw new Exception();
+	
+	value = Double.parseDouble(input);
+	product1[0] = value;
+	break;
+	}catch (Exception ex) {
+		JOptionPane.showMessageDialog(null, "Input must be greater than zero and not empty, try agian.");
+			
+		}//end catch
+	}//while
+	
+	while(true) {
+		try {
+	input = JOptionPane.showInputDialog("Enter the Social Media Expenditure for Product 1");
+	
+	if(Double.parseDouble(input) <= 0 || input == null || input.matches(".*[a-zA-Z]+.*"))
+		throw new Exception();
+	
+	value = Double.parseDouble(input);
+	product1[1] = value;
+	break;
+	}catch (Exception ex) {
+		JOptionPane.showMessageDialog(null, "Input must be greater than zero and not empty, try agian.");
+				
+		}//end catch
+	}//while
+	
+	while(true) {
+		try {
+	input = JOptionPane.showInputDialog("Enter the Radio Expenditure for Product 1");
+	
+	if(Double.parseDouble(input) <= 0 || input == null || input.matches(".*[a-zA-Z]+.*"))
+		throw new Exception();	
+	
+	value = Double.parseDouble(input);
+	product1[2] = value;
+	break;
+	}catch (Exception ex) {
+		JOptionPane.showMessageDialog(null, "Input must be greater than zero and not empty, try agian.");
+					
+		}//end catch
+	}//while
+	
+	while(true) {
+		try {
+	input = JOptionPane.showInputDialog("Enter the Newspaper Expenditure for Product 1");
+	
+	if(Double.parseDouble(input) <= 0 || input == null || input.matches(".*[a-zA-Z]+.*"))
+		throw new Exception();
+	
+	value = Double.parseDouble(input);
+	product1[3] = value;
+	break;
+	}catch (Exception ex) {
+		JOptionPane.showMessageDialog(null, "Input must be greater than zero and not empty, try agian.");
+						
+		}//end catch
+	}//while	
+	
+	while(true) {
+		try {
+	input = JOptionPane.showInputDialog("Enter the Website Marketing Expenditure for Product 2");
+	
+	if(Double.parseDouble(input) <= 0 || input == null || input.matches(".*[a-zA-Z]+.*"))
+		throw new Exception();
+	
+	value = Double.parseDouble(input);
+	product2[0] = value;
+	break;
+	}catch (Exception ex) {
+		JOptionPane.showMessageDialog(null, "Input must be greater than zero and not empty, try agian.");
+							
+		}//end catch
+	}//while
+	
+	while(true) {
+		try {
+	input = JOptionPane.showInputDialog("Enter the Social Media Expenditure for Product 2");
+	
+	if(Double.parseDouble(input) <= 0 || input == null || input.matches(".*[a-zA-Z]+.*"))
+		throw new Exception();
+	
+	value = Double.parseDouble(input);
+	product2[1] = value;
+	break;
+	}catch (Exception ex) {
+		JOptionPane.showMessageDialog(null, "Input must be greater than zero and not empty, try agian.");
+								
+		}//end catch
+	}//while	
+	
+	while(true) {
+		try {
+	input = JOptionPane.showInputDialog("Enter the Radio Expenditure for Product 2");
+	
+	if(Double.parseDouble(input) <= 0 || input == null || input.matches(".*[a-zA-Z]+.*"))
+		throw new Exception();
+	
+	value = Double.parseDouble(input);
+	product2[2] = value;
+	break;
+	}catch (Exception ex) {
+		JOptionPane.showMessageDialog(null, "Input must be greater than zero and not empty, try agian.");
+									
+		}//end catch
+	}//while
+	
+	while(true) {
+		try {
+	input = JOptionPane.showInputDialog("Enter the Newspaper Expenditure for Product 2");
+	
+	if(Double.parseDouble(input) <= 0 || input == null || input.matches(".*[a-zA-Z]+.*"))
+		throw new Exception();
+	
+	value = Double.parseDouble(input);
+	product2[3] = value;
+	break;
+	}catch (Exception ex) {
+		JOptionPane.showMessageDialog(null, "Input must be greater than zero and not empty, try agian.");
+										
+		}//end catch
+	}//while
+	
+	//call total cost method to fill productSums array with total expenditure costs.
+	totalCostPerExpenditure(product1, product2);
+	
+	//call functions to calculate and populate highest/lowest expenditure items
+	highProduct[0] = expenditureItem[(int)highestCostCalculator(product1)];
+	highProduct[1] = expenditureItem[(int)highestCostCalculator(product2)];
+	highProduct[2] = expenditureItem[(int)highestCostCalculator(productSums)];
+	
+	//call functions to calculate highest/lowest expenditure on both products
+	lowProduct[0] = expenditureItem[(int)lowestCostCalculator(product1)];
+	lowProduct[1] = expenditureItem[(int)lowestCostCalculator(product2)];
+	lowProduct[2] = expenditureItem[(int)(lowestCostCalculator(productSums))];
+	
+	//call function to calculate the percentage cost spent on each expenditure.
+	percentageCalculator(productSums);
+	
+	displayData();
+	
+	displayLowHigh();
+	
+	}//end main
+	
+	//Class methods
+	
+	//method to sum the total cost per product.
+	public static double totalCostPerProduct(double[] product) {
+		double sumProduct = 0.0;
+		
+		for (int i = 0; i < product.length; i++)
+			sumProduct += product[i];
+		
+		return sumProduct;
+		
+	}//end totalCostPerProduct
+	
+	//method to sum up the total cost for each expenditure item and place it in the third array.
+	public static void totalCostPerExpenditure(double[] product1, double[] product2) {
+		if(product1.length == product2.length) {
+			for(int i = 0, j = 0, k = 0; i < product1.length; i++,j++,k++)
+				productSums[k] = product1[i] + product2[j];
+		}
+		
+	}//end totalCostPerExpenditure()
+	
+	//method to find the highest cost in an array
+	public static double highestCostCalculator(double[] product){
+		double highValue = product[0];
+		int counter = 0;
+		for(int i = 0; i < product.length; i++) {
+			if(product[i] > highValue) {
+				highValue = product[i];
+				counter = i;
+			}
+		}
+		return counter;
+
+	}//end highestCostCalculator
+	
+	//method to find the lowest cost in an array
+	public static double lowestCostCalculator(double[] product){
+		double lowValue = product[0];
+		int counter = 0;
+		for(int i = 0; i < product.length; i++) {
+			if(product[i] < lowValue) {
+				lowValue = product[i];
+				counter = i;
+			}
+		}
+		return counter;
+	
+	}//end lowestCostCalculator()
+	
+	//method to calculate the total percentage cost on each expenditure and populate the percentagesFinal array
+	public static void percentageCalculator(double[] productSums) {
+		double sum = 0.0;
+		String [] percentages = new String[4];
+		for(int i = 0; i < productSums.length; i++ ) {
+			sum += productSums[i];
+		}
+		
+		for(int j = 0; j < productSums.length; j++) {
+			double value = (productSums[j] / sum) * 100;
+			percentages[j] = String.format("%.2f", value);
+		}
+		
+		//copy the local array into percentagesFinal
+		percentagesFinal = percentages;
+			
+		
+		
+	}//end percentageCalculator()
+	
+	//method to take the three arrays and post them to the output JTextArea
+	public static void displayData() {
+		//initialize a JTable and JFrame.
+		JTable table;
+		JFrame frame;	
+		frame = new JFrame();
+		
+		//put the array values in as the table data.
+		String[][] tableData = {	
+			{expenditureItem[0], Double.toString(product1[0]), Double.toString(product2[0]), Double.toString(productSums[0]), percentagesFinal[0] + "%"},
+			{expenditureItem[1], Double.toString(product1[1]), Double.toString(product2[1]), Double.toString(productSums[1]), percentagesFinal[1] + "%"},
+			{expenditureItem[2], Double.toString(product1[2]), Double.toString(product2[2]), Double.toString(productSums[2]), percentagesFinal[2] + "%"},
+			{expenditureItem[3], Double.toString(product1[3]), Double.toString(product2[3]), Double.toString(productSums[3]), percentagesFinal[3] + "%"}
+				
+		};
+		
+		//set column names.
+		String[] columnNames = {"Expenditure Item Name", "Product 1", "Product 2", "Total cost for Each Expenditure Item", "Percentage of Total Expenditure Cost"};
+		
+		//pass the data and column names to the JTable.
+		table = new JTable(tableData, columnNames);
+		
+		//add the table to a JScrollPane.
+		JScrollPane pane = new JScrollPane(table);
+		
+		//add the JScrollPane to the frame and make it visible.
+		frame.add(pane);
+		frame.setSize(1100, 200);
+		frame.setVisible(true);
+		
+	}//end displayData()
+	
+	public static void displayLowHigh() {
+		//initialize a JTable and JFrame.
+		JTable table;
+		JFrame frame;	
+		frame = new JFrame();
+		
+		//put the array values in as the table data.
+		String[][] tableData = {	
+			{"Highest Expenditure Item", highProduct[0], highProduct[1], highProduct[2]},
+			{"Lowest Expenditure Item", lowProduct[0], lowProduct[1], lowProduct[2]}
+				
+		};
+		
+		//set column names.
+		String[] columnNames = {"", "Product1", "Product2", "Both Products Combined"};
+		
+		//pass the data and column names to the JTable.
+		table = new JTable(tableData, columnNames);
+		
+		//add the table to a JScrollPane.
+		JScrollPane pane = new JScrollPane(table);
+		
+		//add the JScrollPane to the frame and make it visible.
+		frame.add(pane);
+		frame.setSize(700, 200);
+		frame.setVisible(true);
+		
+	}//end displayLowHigh()
+	
+}//end class
+
+

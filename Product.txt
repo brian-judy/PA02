@@ -1,0 +1,142 @@
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
+
+import java.util.Scanner;
+import java.io.*;
+
+public class Product {
+
+	static String[] pName = new String[50];
+	static double[] pPrice = new double[50];
+	
+	
+	public static void main(String[] args) throws FileNotFoundException {
+		//instantiate an input variable for user input
+		String input;
+		
+		//validate that user input is not empty and is a txt file
+		while(true) {
+			try {
+		input = JOptionPane.showInputDialog("Input the file name of the input file:");
+		
+		if(input == null || !(input.endsWith(".txt")))
+			throw new Exception();
+
+		break;
+		}catch (Exception ex) {
+			JOptionPane.showMessageDialog(null, "Input must be non empty and be a txt file.");
+				
+			}//end catch
+		}//while
+		
+		//validate that the user input exists and if not prompt the user for another entry.
+		while(true) {
+		try {
+			readFromFile(input);
+			break;
+		} catch (FileNotFoundException e) {
+			JOptionPane.showMessageDialog(null, "File not found, try agian.");
+			input = JOptionPane.showInputDialog("Input the file name of the input file:");
+		}
+	}//end while
+
+		//call sortArrays to construct a Sort object and pass the arrays to the method
+		sortArrays(pName, pPrice);
+		
+		//call write to file
+		writeToFile(pName, pPrice);
+		
+		
+	}//end main
+	
+	public static void readFromFile(String fileName) throws FileNotFoundException {
+
+			//create a file instance
+			File file = new File(fileName);
+		
+			//create a scanner for the file
+			Scanner sc = new Scanner(file);
+		
+			//read data from the file and update the delimiter to ','
+			sc.useDelimiter(",|\r\n");
+		
+			//initialize a counter to keep track of the array indexes and read through the file.
+			int i = 0;
+			while(sc.hasNext()) {
+			
+				pName[i] = sc.next();
+				pPrice[i] = Double.parseDouble(sc.next().trim());
+				i++;
+			
+				}//end while
+
+		//close the file
+		sc.close();
+		
+		//display the unsorted list
+		String out = "";
+		for(i = 0; i < pName.length; i++) {
+			out += pName[i] + ": " + Double.toString(pPrice[i]) + "\n";
+		}
+		
+		//instantiate JTable and JFrame
+		JPanel panel;
+		JFrame frame;	
+		frame = new JFrame();
+		panel = new JPanel();
+		
+		//add out string to a jtextarea and add that to the panel and set the frame to visible
+		JTextArea text = new JTextArea(out);
+		panel.add(text);
+		
+		frame.add(panel);
+		frame.setSize(500, 1000);
+		frame.setVisible(true);
+		
+		
+	}//end readFromFile
+	
+	public static void sortArrays(String[] pName, double[] pPrice) {
+		//use the constructor to instantiate a Sort object and pass pName and pPrice, selectedSort is called when an object is instantiated
+				Sort sort = new Sort(pName, pPrice);
+				
+		//Sort.selectionSort(pName, pPrice);
+		
+	}//end sortArrays
+	
+	public static void writeToFile(String[] pName, double[] pPrice) throws FileNotFoundException {
+		//write arrays into a file line by line, sortedProducts.txt
+		File file = new File("sortedProducts.txt");
+		
+		PrintWriter write = new PrintWriter(file);
+		
+		String outSorted = "";
+		
+		for(int i = 0; i < pName.length; i++) { 
+			outSorted += pName[i] + ", " + pPrice[i] + "\n";
+		}
+		
+		write.print(outSorted);
+		
+		write.close();
+		
+		//display pane with sorted array
+		JPanel panel;
+		JFrame frame;	
+		frame = new JFrame();
+		panel = new JPanel();
+		
+		//add out string to a jtextarea and add that to the panel and set the frame to visible
+		JTextArea text = new JTextArea(outSorted);
+		panel.add(text);
+		
+		frame.add(panel);
+		frame.setSize(500, 1000);
+		frame.setVisible(true);
+		
+	}//end writeToFile
+	
+
+}

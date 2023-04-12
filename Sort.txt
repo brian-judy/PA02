@@ -1,0 +1,47 @@
+
+public class Sort {
+
+	//Instantiate variables
+	private String[] pName = new String[50];
+	private double[] pPrice = new double[50];
+	
+	//Constructor
+	Sort(String[] pName, double[] pPrice) {
+		this.pName = pName;
+		this.pPrice = pPrice;
+		this.selectionSort(pName, pPrice);
+		
+	}
+	
+	public void selectionSort(String[] pName, double[] pPrice) {
+	    for (int i = 0; i < pPrice.length - 1; i++) {
+	        // Find the minimum in the pPrice[i..pPrice.length-1]
+	        double currentMin = pPrice[i];
+	        int currentMinIndex = i;
+	        String currentName = "";
+	        int currentNameIndex = 0;
+	        
+
+	        for (int j = i + 1; j < pPrice.length; j++) {
+	          if (currentMin > pPrice[j]) {
+	            currentMin = pPrice[j];
+	            currentMinIndex = j;
+	            currentNameIndex = j;
+	            currentName = pName[j];
+	          }
+	        }
+
+	        // Swap pPrice[i] with pPrice[currentMinIndex] and pName[i] with pName[currentNameIndex] if necessary;
+	        if (currentMinIndex != i) {
+	          pPrice[currentMinIndex] = pPrice[i];
+	          pPrice[i] = currentMin;
+	          pName[currentNameIndex] = pName[i];
+	          pName[i] = currentName;
+	          
+	        }
+	      }
+		
+	}
+
+	
+}//end class
